@@ -214,3 +214,19 @@ void CAirplanePlayer::FireBullet(CGameObject* pLockedObject)
 		}
 	}
 }
+
+CRollercoasterPlayer::CRollercoasterPlayer()
+{
+}
+
+CRollercoasterPlayer::~CRollercoasterPlayer()
+{
+}
+
+void CRollercoasterPlayer::Animate(float fElapsedTime)
+{
+}
+
+void CRollercoasterPlayer::Render(HDC hDCFrameBuffer, CCamera* pCamera)
+{
+}

@@ -79,8 +79,10 @@ void CGameFramework::BuildObjects()
 	m_pPlayer->SetCamera(pCamera);
 	m_pPlayer->SetCameraOffset(XMFLOAT3(0.0f, 5.0f, -15.0f));
 
-	m_pScene = new CScene(m_pPlayer);
-	m_pScene->BuildObjects();
+	//m_pScene = new CScene(m_pPlayer);
+	m_pTitleScene = new TitleScene();
+	m_pTitleScene->BuildObjects();
+	//m_pScene->BuildObjects();
 }
 
 void CGameFramework::ReleaseObjects()
@@ -228,7 +230,8 @@ void CGameFramework::FrameAdvance()
     ClearFrameBuffer(RGB(255, 255, 255));
 
 	CCamera* pCamera = m_pPlayer->GetCamera();
-	if (m_pScene) m_pScene->Render(m_hDCFrameBuffer, pCamera);
+	//if (m_pScene) m_pScene->Render(m_hDCFrameBuffer, pCamera);
+	if (m_pTitleScene) m_pTitleScene->Render(m_hDCFrameBuffer, pCamera);
 
 	PresentFrameBuffer();
 
