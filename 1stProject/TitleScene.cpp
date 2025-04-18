@@ -12,6 +12,8 @@ TitleScene::~TitleScene()
 
 void TitleScene::BuildObjects()
 {
+	CExplosiveObject::PrepareExplosion();
+
 	float fHalfWidth = 45.0f, fHalfHeight = 45.0f, fHalfDepth = 200.0f;
 	CWallMesh* pWallCubeMesh = new CWallMesh(fHalfWidth * 2.0f, fHalfHeight * 2.0f, fHalfDepth * 2.0f, 30);
 
@@ -26,10 +28,20 @@ void TitleScene::BuildObjects()
 	m_pWallsObject->m_pxmf4WallPlanes[4] = XMFLOAT4(0.0f, 0.0f, +1.0f, fHalfDepth);
 	m_pWallsObject->m_pxmf4WallPlanes[5] = XMFLOAT4(0.0f, 0.0f, -1.0f, fHalfDepth);
 	m_pWallsObject->m_xmOOBBPlayerMoveCheck = BoundingOrientedBox(XMFLOAT3(0.0f, 0.0f, 0.0f), XMFLOAT3(fHalfWidth, fHalfHeight, fHalfDepth * 0.05f), XMFLOAT4(0.0f, 0.0f, 0.0f, 1.0f));
+
+	CCubeMesh* pCubeMesh = new CCubeMesh(4.0f, 4.0f, 4.0f);
+
+	m_ppObjects[0] = new CExplosiveObject();
+	m_ppObjects[0]->SetMesh(pCubeMesh);
+	m_ppObjects[0]->SetColor(RGB(255, 0, 0));
+	m_ppObjects[0]->SetPosition(0.0f, 0.0f, 14.0f);
+	m_ppObjects[0]->SetRotationAxis(XMFLOAT3(0.0f, 0.0f, 1.0f));
+	m_ppObjects[0]->SetRotationSpeed(90.0f);
 }
 
 void TitleScene::ReleaseObjects()
 {
+	if (m_ppObjects) delete[] m_ppObjects;
 	if (m_pWallsObject) delete m_pWallsObject;
 }
 
@@ -43,4 +55,5 @@ void TitleScene::Render(HDC hDCFrameBuffer, CCamera* pCamera)
 
 	CGraphicsPipeline::SetViewPerspectiveProjectTransform(&pCamera->m_xmf4x4ViewPerspectiveProject);
 	m_pWallsObject->Render(hDCFrameBuffer, pCamera);
+	m_ppObjects[0]->Render(hDCFrameBuffer, pCamera);
 }

@@ -13,7 +13,7 @@ public:
 private:
 	CGameObject ** m_ppObjects = NULL;
 
-	CWallsObject* m_pWallsObject = NULL;
+	CWallsObject * m_pWallsObject = NULL;
 
 
 public:
