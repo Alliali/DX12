@@ -89,10 +89,13 @@ void CGameFramework::BuildObjects()
 
 void CGameFramework::ReleaseObjects()
 {
-	if (m_pScene)
+	//if (m_pScene)
+	if (m_pTitleScene)
 	{
-		m_pScene->ReleaseObjects();
-		delete m_pScene;
+		//m_pScene->ReleaseObjects();
+		m_pTitleScene->ReleaseObjects();
+		delete m_pTitleScene;
+		//delete m_pScene;
 	}
 
 	if (m_pPlayer) delete m_pPlayer;
@@ -218,7 +221,9 @@ void CGameFramework::AnimateObjects()
 {
 	float fTimeElapsed = m_GameTimer.GetTimeElapsed();
 	if (m_pPlayer) m_pPlayer->Animate(fTimeElapsed);
-	if (m_pScene) m_pScene->Animate(fTimeElapsed);
+	//if (m_pScene) m_pScene->Animate(fTimeElapsed);
+	if (m_pTitleScene) m_pTitleScene->Animate(fTimeElapsed);
+
 }
 
 void CGameFramework::FrameAdvance()
