@@ -7,6 +7,10 @@ CScene::CScene(CPlayer* pPlayer)
 	m_pPlayer = pPlayer;
 }
 
+CScene::CScene()
+{
+}
+
 CScene::~CScene()
 {
 }

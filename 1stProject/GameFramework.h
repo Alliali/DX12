@@ -26,6 +26,8 @@ private:
 	CPlayer*					m_pPlayer = NULL;
 	CScene*						m_pScene = NULL;
 	TitleScene*					m_pTitleScene = NULL;
+	CScene*						m_pCurrentScene = NULL;
+
 	CGameObject*				m_pLockedObject = NULL;
 
 	CGameTimer					m_GameTimer;
@@ -48,6 +50,8 @@ public:
 	void ProcessInput();
 	void AnimateObjects();
 	void FrameAdvance();
+
+	void ChangeScene(SceneType eNextScene);
 
 	void OnProcessingMouseMessage(HWND hWnd, UINT nMessageID, WPARAM wParam, LPARAM lParam);
 	void OnProcessingKeyboardMessage(HWND hWnd, UINT nMessageID, WPARAM wParam, LPARAM lParam);

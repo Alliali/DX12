@@ -48,6 +48,11 @@ using namespace DirectX::PackedVector;
 inline bool IsZero(float fValue) { return((fabsf(fValue) < EPSILON)); }
 inline bool IsEqual(float fA, float fB) { return(::IsZero(fA - fB)); }
 
+enum class SceneType
+{
+	Title, Menu, Tutorial, Level_1, Level_2, Start, Exit
+};
+
 namespace Vector3
 {
 	inline XMFLOAT3 XMVectorToFloat3(XMVECTOR& xmvVector)

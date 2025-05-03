@@ -3,8 +3,10 @@
 #include "GameObject.h"
 #include "Camera.h"
 #include "Player.h"
+#include "Scene.h"
+#include "GameObject.h"
 
-class TitleScene
+class TitleScene : public CScene
 {
 public:
 	TitleScene();

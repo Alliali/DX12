@@ -8,6 +8,7 @@ class CScene
 {
 public:
 	CScene(CPlayer *pPlayer);
+	CScene();
 	virtual ~CScene();
 
 private:

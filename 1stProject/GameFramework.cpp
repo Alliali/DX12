@@ -79,6 +79,8 @@ void CGameFramework::BuildObjects()
 	m_pPlayer->SetCamera(pCamera);
 	m_pPlayer->SetCameraOffset(XMFLOAT3(0.0f, 5.0f, -15.0f));
 
+	ChangeScene(SceneType::Title);
+
 	//m_pScene = new CScene(m_pPlayer);
 	m_pTitleScene = new TitleScene();
 	m_pTitleScene->BuildObjects();
@@ -239,4 +241,26 @@ void CGameFramework::FrameAdvance()
 	::SetWindowText(m_hWnd, m_pszFrameRate);
 }
 
-
+void CGameFramework::ChangeScene(SceneType eNextScene)
+{
+	switch (eNextScene)
+	{
+	case SceneType::Title:
+		m_pCurrentScene = new TitleScene();
+		break;
+	case SceneType::Menu:
+		break;
+	case SceneType::Tutorial:
+		break;
+	case SceneType::Level_1:
+		break;
+	case SceneType::Level_2:
+		break;
+	case SceneType::Start:
+		break;
+	case SceneType::Exit:
+		break;
+	default:
+		break;
+	}
+}
