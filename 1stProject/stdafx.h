@@ -50,7 +50,7 @@ inline bool IsEqual(float fA, float fB) { return(::IsZero(fA - fB)); }
 
 enum class SceneType
 {
-	Title, Menu, Tutorial, Level_1, Level_2, Start, Exit
+	Title, Menu, Tutorial, Level_1, Level_2, Scene, Exit
 };
 
 namespace Vector3

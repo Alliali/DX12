@@ -3,12 +3,12 @@
 #include "GameObject.h"
 #include "Camera.h"
 #include "Player.h"
+#include "SceneManager.h"
 
-class CScene
+class CScene : public SceneManager
 {
 public:
 	CScene(CPlayer *pPlayer);
-	CScene();
 	virtual ~CScene();
 
 private:

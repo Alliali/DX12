@@ -1,8 +1,9 @@
 #include "stdafx.h"
 #include "TitleScene.h"
 #include "GraphicsPipeline.h"
+#include "GameFramework.h"
 
-TitleScene::TitleScene()
+TitleScene::TitleScene(CPlayer* pPlayer) : SceneManager(pPlayer)
 {
 }
 
@@ -48,15 +49,6 @@ void TitleScene::BuildObjects()
 #endif
 }
 
-void TitleScene::ReleaseObjects()
-{
-	if (CExplosiveObject::m_pExplosionMesh) CExplosiveObject::m_pExplosionMesh->Release();
-
-	if (m_ppObjects[0]) delete m_ppObjects[0];
-	if (m_ppObjects) delete[] m_ppObjects;
-	if (m_pWallsObject) delete m_pWallsObject;
-}
-
 void TitleScene::Animate(float fElapsedTime)
 {
 	m_pWallsObject->Animate(fElapsedTime);
@@ -76,4 +68,11 @@ void TitleScene::Render(HDC hDCFrameBuffer, CCamera* pCamera)
 	m_pWorldAxis->SetRotationTransform(&m_pPlayer->m_xmf4x4World);
 	m_pWorldAxis->Render(hDCFrameBuffer, pCamera);
 #endif
+}
+
+void TitleScene::OnProcessingMouseMessage(HWND hWnd, UINT nMessageID, WPARAM wParam, LPARAM lParam)
+{
+	if (nMessageID == WM_KEYDOWN && wParam == VK_RETURN) {
+		m_pFramework->ChangeScene(SceneType::Scene);
+	}
 }

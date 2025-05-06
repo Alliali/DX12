@@ -82,21 +82,16 @@ void CGameFramework::BuildObjects()
 	ChangeScene(SceneType::Title);
 
 	//m_pScene = new CScene(m_pPlayer);
-	m_pTitleScene = new TitleScene();
-	m_pTitleScene->BuildObjects();
 	//m_pScene->BuildObjects();
 }
 
 void CGameFramework::ReleaseObjects()
 {
 	//if (m_pScene)
-	if (m_pTitleScene)
-	{
-		//m_pScene->ReleaseObjects();
-		m_pTitleScene->ReleaseObjects();
-		delete m_pTitleScene;
-		//delete m_pScene;
-	}
+	//{
+	//	//m_pScene->ReleaseObjects();
+	//	//delete m_pScene;
+	//}
 
 	if (m_pPlayer) delete m_pPlayer;
 }
@@ -222,7 +217,7 @@ void CGameFramework::AnimateObjects()
 	float fTimeElapsed = m_GameTimer.GetTimeElapsed();
 	if (m_pPlayer) m_pPlayer->Animate(fTimeElapsed);
 	//if (m_pScene) m_pScene->Animate(fTimeElapsed);
-	if (m_pTitleScene) m_pTitleScene->Animate(fTimeElapsed);
+	if (m_pCurrentScene) m_pCurrentScene->Animate(fTimeElapsed);
 
 }
 
@@ -238,7 +233,7 @@ void CGameFramework::FrameAdvance()
 
 	CCamera* pCamera = m_pPlayer->GetCamera();
 	//if (m_pScene) m_pScene->Render(m_hDCFrameBuffer, pCamera);
-	if (m_pTitleScene) m_pTitleScene->Render(m_hDCFrameBuffer, pCamera);
+	if (m_pCurrentScene) m_pCurrentScene->Render(m_hDCFrameBuffer, pCamera);
 
 	PresentFrameBuffer();
 
@@ -246,26 +241,15 @@ void CGameFramework::FrameAdvance()
 	::SetWindowText(m_hWnd, m_pszFrameRate);
 }
 
-void CGameFramework::ChangeScene(SceneType eNextScene)
+void CGameFramework::ChangeScene(SceneType type)
 {
-	switch (eNextScene)
+	if (m_pCurrentScene)
 	{
-	case SceneType::Title:
-		m_pCurrentScene = new TitleScene();
-		break;
-	case SceneType::Menu:
-		break;
-	case SceneType::Tutorial:
-		break;
-	case SceneType::Level_1:
-		break;
-	case SceneType::Level_2:
-		break;
-	case SceneType::Start:
-		break;
-	case SceneType::Exit:
-		break;
-	default:
-		break;
+		delete m_pCurrentScene;
 	}
+
+	m_pCurrentScene = SceneFactory::CreateScene(type, m_pPlayer);
+	m_pCurrentScene->SetFramework(this);
+	m_pCurrentScene->BuildObjects();
+
 }

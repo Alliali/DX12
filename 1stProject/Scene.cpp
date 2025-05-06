@@ -2,13 +2,9 @@
 #include "Scene.h"
 #include "GraphicsPipeline.h"
 
-CScene::CScene(CPlayer* pPlayer)
+CScene::CScene(CPlayer* pPlayer) : SceneManager(pPlayer)
 {
 	m_pPlayer = pPlayer;
-}
-
-CScene::CScene()
-{
 }
 
 CScene::~CScene()

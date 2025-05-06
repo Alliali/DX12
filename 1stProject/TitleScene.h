@@ -2,14 +2,13 @@
 
 #include "GameObject.h"
 #include "Camera.h"
-#include "Player.h"
-#include "Scene.h"
-#include "GameObject.h"
+#include "SceneManager.h"
 
-class TitleScene : public CScene
+
+class TitleScene : public SceneManager
 {
 public:
-	TitleScene();
+	TitleScene(CPlayer* pPlayer);
 	virtual ~TitleScene();
 
 private:
@@ -17,12 +16,10 @@ private:
 
 	CWallsObject * m_pWallsObject = NULL;
 
-
 public:
-	virtual void BuildObjects();
-	virtual void ReleaseObjects();
-
-	virtual void Animate(float fElapsedTime);
-	virtual void Render(HDC hDCFrameBuffer, CCamera* pCamera);
+	void BuildObjects() override;
+	void Animate(float fElapsedTime) override;
+	void Render(HDC hDCFrameBuffer, CCamera* pCamera) override;
+	void OnProcessingMouseMessage(HWND hWnd, UINT nMessageID, WPARAM wParam, LPARAM lParam) override;
 };
 

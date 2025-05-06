@@ -2,7 +2,7 @@
 
 #include "Player.h"
 #include "Scene.h"
-#include "TitleScene.h"
+#include "SceneFactory.h"
 #include "Timer.h"
 
 class CGameFramework
@@ -25,8 +25,7 @@ private:
 
 	CPlayer*					m_pPlayer = NULL;
 	CScene*						m_pScene = NULL;
-	TitleScene*					m_pTitleScene = NULL;
-	CScene*						m_pCurrentScene = NULL;
+	SceneManager*				m_pCurrentScene = NULL;
 
 	CGameObject*				m_pLockedObject = NULL;
 
