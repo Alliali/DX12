@@ -100,14 +100,24 @@ void CGameFramework::OnProcessingMouseMessage(HWND hWnd, UINT nMessageID, WPARAM
 {
 	if (m_pScene) m_pScene->OnProcessingMouseMessage(hWnd, nMessageID, wParam, lParam);
 
+	if (m_pCurrentScene) m_pCurrentScene->OnProcessingMouseMessage(hWnd, nMessageID, wParam, lParam);
+
 	switch (nMessageID)
 	{
 	case WM_RBUTTONDOWN:
 	case WM_LBUTTONDOWN:
 		::SetCapture(hWnd);
 		::GetCursorPos(&m_ptOldCursorPos);
-		if (nMessageID == WM_RBUTTONDOWN) m_pLockedObject = m_pScene->PickObjectPointedByCursor(LOWORD(lParam), HIWORD(lParam), m_pPlayer->m_pCamera);
-		break;
+		if (nMessageID == WM_LBUTTONDOWN) {
+			m_pLockedObject = m_pCurrentScene->PickObjectPointedByCursor(LOWORD(lParam), HIWORD(lParam), m_pPlayer->m_pCamera);
+			if (m_pLockedObject) {
+				SceneType nextScene = m_pLockedObject->GetNextScene();
+				if (nextScene != SceneType::None) {
+					ChangeScene(nextScene);
+				}
+			}
+			break;
+		}
 	case WM_LBUTTONUP:
 	case WM_RBUTTONUP:
 		::ReleaseCapture();
@@ -122,6 +132,9 @@ void CGameFramework::OnProcessingMouseMessage(HWND hWnd, UINT nMessageID, WPARAM
 void CGameFramework::OnProcessingKeyboardMessage(HWND hWnd, UINT nMessageID, WPARAM wParam, LPARAM lParam)
 {
 	if (m_pScene) m_pScene->OnProcessingKeyboardMessage(hWnd, nMessageID, wParam, lParam);
+
+	if (m_pCurrentScene) m_pCurrentScene->OnProcessingKeyboardMessage(hWnd, nMessageID, wParam, lParam);
+
 
 	switch (nMessageID)
 	{
@@ -138,7 +151,7 @@ void CGameFramework::OnProcessingKeyboardMessage(HWND hWnd, UINT nMessageID, WPA
 			m_pLockedObject = NULL;
 			break;
 		default:
-			m_pScene->OnProcessingKeyboardMessage(hWnd, nMessageID, wParam, lParam);
+			//m_pScene->OnProcessingKeyboardMessage(hWnd, nMessageID, wParam, lParam);
 			break;
 		}
 		break;

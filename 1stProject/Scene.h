@@ -32,7 +32,7 @@ public:
 	void CheckPlayerByWallCollision();
 	void CheckObjectByBulletCollisions();
 
-	virtual void Animate(float fElapsedTime);
+	void Animate(float fElapsedTime) override;
 	virtual void Render(HDC hDCFrameBuffer, CCamera* pCamera);
 
 	virtual void OnProcessingMouseMessage(HWND hWnd, UINT nMessageID, WPARAM wParam, LPARAM lParam);

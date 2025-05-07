@@ -9,6 +9,9 @@ public:
 	CGameObject() { }
 	virtual ~CGameObject();
 
+protected:
+	SceneType m_eNextSceneType = SceneType::None;
+
 public:
 	bool						m_bActive = true;
 
@@ -45,6 +48,8 @@ public:
 	void SetRotationAxis(XMFLOAT3& xmf3RotationAxis) { m_xmf3RotationAxis = Vector3::Normalize(xmf3RotationAxis); }
 	void SetRotationSpeed(float fSpeed) { m_fRotationSpeed = fSpeed; }
 
+	void SetNextScene(SceneType type) { m_eNextSceneType = type; }
+
 	void MoveStrafe(float fDistance = 1.0f);
 	void MoveUp(float fDistance = 1.0f);
 	void MoveForward(float fDistance = 1.0f);
@@ -57,6 +62,8 @@ public:
 	XMFLOAT3 GetLook();
 	XMFLOAT3 GetUp();
 	XMFLOAT3 GetRight();
+	
+	SceneType GetNextScene() const { return m_eNextSceneType; }
 
 	void LookTo(XMFLOAT3& xmf3LookTo, XMFLOAT3& xmf3Up);
 	void LookAt(XMFLOAT3& xmf3LookAt, XMFLOAT3& xmf3Up);

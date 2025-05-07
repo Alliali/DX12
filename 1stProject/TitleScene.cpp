@@ -40,6 +40,7 @@ void TitleScene::BuildObjects()
 	m_ppObjects[0]->SetPosition(0.0f, 0.0f, 14.0f);
 	m_ppObjects[0]->SetRotationAxis(XMFLOAT3(0.0f, 1.0f, 0.0f));
 	m_ppObjects[0]->SetRotationSpeed(90.0f);
+	m_ppObjects[0]->SetNextScene(SceneType::Scene);
 
 
 #ifdef _WITH_DRAW_AXIS
@@ -75,4 +76,33 @@ void TitleScene::OnProcessingMouseMessage(HWND hWnd, UINT nMessageID, WPARAM wPa
 	if (nMessageID == WM_KEYDOWN && wParam == VK_RETURN) {
 		m_pFramework->ChangeScene(SceneType::Scene);
 	}
+}
+
+void TitleScene::OnProcessingKeyboardMessage(HWND hWnd, UINT nMessageID, WPARAM wParam, LPARAM lParam)
+{
+}
+
+CGameObject* TitleScene::PickObjectPointedByCursor(int xClient, int yClient, CCamera* pCamera)
+{
+	XMFLOAT3 xmf3PickPosition;
+	xmf3PickPosition.x = (((2.0f * xClient) / (float)pCamera->m_Viewport.m_nWidth) - 1) / pCamera->m_xmf4x4PerspectiveProject._11;
+	xmf3PickPosition.y = -(((2.0f * yClient) / (float)pCamera->m_Viewport.m_nHeight) - 1) / pCamera->m_xmf4x4PerspectiveProject._22;
+	xmf3PickPosition.z = 1.0f;
+
+	XMVECTOR xmvPickPosition = XMLoadFloat3(&xmf3PickPosition);
+	XMMATRIX xmmtxView = XMLoadFloat4x4(&pCamera->m_xmf4x4View);
+
+	int nIntersected = 0;
+	float fNearestHitDistance = FLT_MAX;
+	CGameObject* pNearestObject = NULL;
+	
+		float fHitDistance = FLT_MAX;
+		nIntersected = m_ppObjects[0]->PickObjectByRayIntersection(xmvPickPosition, xmmtxView, &fHitDistance);
+		if ((nIntersected > 0) && (fHitDistance < fNearestHitDistance))
+		{
+			fNearestHitDistance = fHitDistance;
+			pNearestObject = m_ppObjects[0];
+		}
+	
+	return(pNearestObject);
 }

@@ -21,5 +21,9 @@ public:
 	void Animate(float fElapsedTime) override;
 	void Render(HDC hDCFrameBuffer, CCamera* pCamera) override;
 	void OnProcessingMouseMessage(HWND hWnd, UINT nMessageID, WPARAM wParam, LPARAM lParam) override;
+	void OnProcessingKeyboardMessage(HWND hWnd, UINT nMessageID, WPARAM wParam, LPARAM lParam) override;
+
+	CGameObject* PickObjectPointedByCursor(int xClient, int yClient, CCamera* pCamera);
+
 };
 
