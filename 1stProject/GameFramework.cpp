@@ -80,9 +80,6 @@ void CGameFramework::BuildObjects()
 	m_pPlayer->SetCameraOffset(XMFLOAT3(0.0f, 5.0f, -15.0f));
 
 	ChangeScene(SceneType::Title);
-
-	//m_pScene = new CScene(m_pPlayer);
-	//m_pScene->BuildObjects();
 }
 
 void CGameFramework::ReleaseObjects()
@@ -111,9 +108,8 @@ void CGameFramework::OnProcessingMouseMessage(HWND hWnd, UINT nMessageID, WPARAM
 		if (nMessageID == WM_LBUTTONDOWN) {
 			m_pLockedObject = m_pCurrentScene->PickObjectPointedByCursor(LOWORD(lParam), HIWORD(lParam), m_pPlayer->m_pCamera);
 			if (m_pLockedObject) {
-				SceneType nextScene = m_pLockedObject->GetNextScene();
-				if (nextScene != SceneType::None) {
-					ChangeScene(nextScene);
+				if (m_pCurrentScene) {
+					m_pCurrentScene->OnObjectByCursorCollision(m_pLockedObject);
 				}
 			}
 			break;
@@ -151,7 +147,6 @@ void CGameFramework::OnProcessingKeyboardMessage(HWND hWnd, UINT nMessageID, WPA
 			m_pLockedObject = NULL;
 			break;
 		default:
-			//m_pScene->OnProcessingKeyboardMessage(hWnd, nMessageID, wParam, lParam);
 			break;
 		}
 		break;
@@ -229,7 +224,6 @@ void CGameFramework::AnimateObjects()
 {
 	float fTimeElapsed = m_GameTimer.GetTimeElapsed();
 	if (m_pPlayer) m_pPlayer->Animate(fTimeElapsed);
-	//if (m_pScene) m_pScene->Animate(fTimeElapsed);
 	if (m_pCurrentScene) m_pCurrentScene->Animate(fTimeElapsed);
 
 }
@@ -245,7 +239,6 @@ void CGameFramework::FrameAdvance()
     ClearFrameBuffer(RGB(255, 255, 255));
 
 	CCamera* pCamera = m_pPlayer->GetCamera();
-	//if (m_pScene) m_pScene->Render(m_hDCFrameBuffer, pCamera);
 	if (m_pCurrentScene) m_pCurrentScene->Render(m_hDCFrameBuffer, pCamera);
 
 	PresentFrameBuffer();

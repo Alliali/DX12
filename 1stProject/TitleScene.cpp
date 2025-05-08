@@ -42,6 +42,7 @@ void TitleScene::BuildObjects()
 	m_ppObjects[0]->SetRotationSpeed(90.0f);
 	m_ppObjects[0]->SetNextScene(SceneType::Scene);
 
+	m_pExplosiveObject = static_cast<CExplosiveObject*>(m_ppObjects[0]);
 
 #ifdef _WITH_DRAW_AXIS
 	m_pWorldAxis = new CGameObject();
@@ -54,6 +55,13 @@ void TitleScene::Animate(float fElapsedTime)
 {
 	m_pWallsObject->Animate(fElapsedTime);
 	m_ppObjects[0]->Animate(fElapsedTime);
+
+	if (m_pExplosiveObject->m_bBlowingUp) {
+		m_pExplosiveObject->Animate(fElapsedTime);
+		if (m_pExplosiveObject->IsExplosionFinished()) {
+			m_pFramework->ChangeScene(SceneType::Scene);
+		}
+	}
 }
 
 void TitleScene::Render(HDC hDCFrameBuffer, CCamera* pCamera)
@@ -73,13 +81,18 @@ void TitleScene::Render(HDC hDCFrameBuffer, CCamera* pCamera)
 
 void TitleScene::OnProcessingMouseMessage(HWND hWnd, UINT nMessageID, WPARAM wParam, LPARAM lParam)
 {
-	if (nMessageID == WM_KEYDOWN && wParam == VK_RETURN) {
-		m_pFramework->ChangeScene(SceneType::Scene);
-	}
+
 }
 
 void TitleScene::OnProcessingKeyboardMessage(HWND hWnd, UINT nMessageID, WPARAM wParam, LPARAM lParam)
 {
+}
+
+void TitleScene::OnObjectByCursorCollision(CGameObject* pObject)
+{
+	if (pObject == m_ppObjects[0]) {
+		m_pExplosiveObject->m_bBlowingUp = true;
+	}
 }
 
 CGameObject* TitleScene::PickObjectPointedByCursor(int xClient, int yClient, CCamera* pCamera)

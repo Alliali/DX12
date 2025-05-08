@@ -37,6 +37,7 @@ public:
 
 	virtual void OnProcessingMouseMessage(HWND hWnd, UINT nMessageID, WPARAM wParam, LPARAM lParam);
 	virtual void OnProcessingKeyboardMessage(HWND hWnd, UINT nMessageID, WPARAM wParam, LPARAM lParam);
+	void OnObjectByCursorCollision(CGameObject* pObject) override;
 
 	CGameObject* PickObjectPointedByCursor(int xClient, int yClient, CCamera* pCamera);
 };

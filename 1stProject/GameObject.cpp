@@ -247,6 +247,7 @@ void CExplosiveObject::Animate(float fElapsedTime)
 		else
 		{
 			m_bBlowingUp = false;
+			m_bExplosionFinished = true;
 			m_fElapsedTimes = 0.0f;
 		}
 	}

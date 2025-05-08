@@ -87,6 +87,7 @@ public:
 	virtual ~CExplosiveObject();
 
 	bool						m_bBlowingUp = false;
+	bool						m_bExplosionFinished = false;
 
 	XMFLOAT4X4					m_pxmf4x4Transforms[EXPLOSION_DEBRISES];
 
@@ -103,6 +104,8 @@ public:
 	static XMFLOAT3				m_pxmf3SphereVectors[EXPLOSION_DEBRISES];
 
 	static void PrepareExplosion();
+
+	bool IsExplosionFinished() const { return m_bExplosionFinished; }
 };
 
 class CWallsObject : public CGameObject

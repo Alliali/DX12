@@ -24,6 +24,7 @@ public:
 	virtual void Render(HDC hDCFrameBuffer, CCamera* pCamera) = 0;
 	virtual void OnProcessingMouseMessage(HWND hWnd, UINT nMessageID, WPARAM wParam, LPARAM lParam) = 0;
 	virtual void OnProcessingKeyboardMessage(HWND hWnd, UINT nMessageID, WPARAM wParam, LPARAM lParam) = 0;
+	virtual void OnObjectByCursorCollision(CGameObject* pObject) = 0;
 	virtual CGameObject* PickObjectPointedByCursor(int xClient, int yClient, CCamera* pCamera) = 0;
 };
 

@@ -187,6 +187,10 @@ void CScene::OnProcessingKeyboardMessage(HWND hWnd, UINT nMessageID, WPARAM wPar
 	}
 }
 
+void CScene::OnObjectByCursorCollision(CGameObject* pObject)
+{
+}
+
 CGameObject* CScene::PickObjectPointedByCursor(int xClient, int yClient, CCamera* pCamera)
 {
 	XMFLOAT3 xmf3PickPosition;
