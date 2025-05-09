@@ -40,7 +40,7 @@ void TitleScene::BuildObjects()
 	m_ppObjects[0]->SetPosition(0.0f, 0.0f, 14.0f);
 	m_ppObjects[0]->SetRotationAxis(XMFLOAT3(0.0f, 1.0f, 0.0f));
 	m_ppObjects[0]->SetRotationSpeed(90.0f);
-	m_ppObjects[0]->SetNextScene(SceneType::Scene);
+	m_ppObjects[0]->SetNextScene(SceneType::Menu);
 
 	m_pExplosiveObject = static_cast<CExplosiveObject*>(m_ppObjects[0]);
 
@@ -59,7 +59,7 @@ void TitleScene::Animate(float fElapsedTime)
 	if (m_pExplosiveObject->m_bBlowingUp) {
 		m_pExplosiveObject->Animate(fElapsedTime);
 		if (m_pExplosiveObject->IsExplosionFinished()) {
-			m_pFramework->ChangeScene(SceneType::Scene);
+			m_pFramework->ChangeScene(m_pExplosiveObject->GetNextScene());
 		}
 	}
 }
