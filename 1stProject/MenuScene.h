@@ -11,7 +11,7 @@ public:
 	virtual ~MenuScene();
 
 private:
-	int							m_nObjects = 0;
+	int			m_nObjects = 0;
 	CGameObject** m_ppObjects = NULL;
 
 	CWallsObject* m_pWallsObject = NULL;

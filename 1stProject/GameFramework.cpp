@@ -109,6 +109,9 @@ void CGameFramework::OnProcessingMouseMessage(HWND hWnd, UINT nMessageID, WPARAM
 			m_pLockedObject = m_pCurrentScene->PickObjectPointedByCursor(LOWORD(lParam), HIWORD(lParam), m_pPlayer->m_pCamera);
 			if (m_pLockedObject) {
 				if (m_pCurrentScene) {
+					if (m_pLockedObject->GetNextScene() == SceneType::End) {
+						::PostQuitMessage(0);
+					}
 					m_pCurrentScene->OnObjectByCursorCollision(m_pLockedObject);
 				}
 			}

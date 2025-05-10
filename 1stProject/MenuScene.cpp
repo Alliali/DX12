@@ -77,11 +77,6 @@ void MenuScene::BuildObjects()
 
 	
 	m_pExplosiveObject = static_cast<CExplosiveObject*>(m_ppObjects[0]);
-	m_pExplosiveObject = static_cast<CExplosiveObject*>(m_ppObjects[1]);
-	m_pExplosiveObject = static_cast<CExplosiveObject*>(m_ppObjects[2]);
-	m_pExplosiveObject = static_cast<CExplosiveObject*>(m_ppObjects[3]);
-	m_pExplosiveObject = static_cast<CExplosiveObject*>(m_ppObjects[4]);
-
 
 #ifdef _WITH_DRAW_AXIS
 	m_pWorldAxis = new CGameObject();
