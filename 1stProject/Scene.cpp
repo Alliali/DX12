@@ -2,13 +2,9 @@
 #include "Scene.h"
 #include "GraphicsPipeline.h"
 
-CScene::CScene(CPlayer* pPlayer)
+CScene::CScene(CPlayer* pPlayer) : SceneManager(pPlayer)
 {
 	m_pPlayer = pPlayer;
-}
-
-CScene::CScene()
-{
 }
 
 CScene::~CScene()
@@ -189,6 +185,10 @@ void CScene::OnProcessingKeyboardMessage(HWND hWnd, UINT nMessageID, WPARAM wPar
 	default:
 		break;
 	}
+}
+
+void CScene::OnObjectByCursorCollision(CGameObject* pObject)
+{
 }
 
 CGameObject* CScene::PickObjectPointedByCursor(int xClient, int yClient, CCamera* pCamera)

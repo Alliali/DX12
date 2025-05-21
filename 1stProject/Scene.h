@@ -3,12 +3,12 @@
 #include "GameObject.h"
 #include "Camera.h"
 #include "Player.h"
+#include "SceneManager.h"
 
-class CScene
+class CScene : public SceneManager
 {
 public:
 	CScene(CPlayer *pPlayer);
-	CScene();
 	virtual ~CScene();
 
 private:
@@ -32,11 +32,12 @@ public:
 	void CheckPlayerByWallCollision();
 	void CheckObjectByBulletCollisions();
 
-	virtual void Animate(float fElapsedTime);
+	void Animate(float fElapsedTime) override;
 	virtual void Render(HDC hDCFrameBuffer, CCamera* pCamera);
 
 	virtual void OnProcessingMouseMessage(HWND hWnd, UINT nMessageID, WPARAM wParam, LPARAM lParam);
 	virtual void OnProcessingKeyboardMessage(HWND hWnd, UINT nMessageID, WPARAM wParam, LPARAM lParam);
+	void OnObjectByCursorCollision(CGameObject* pObject) override;
 
 	CGameObject* PickObjectPointedByCursor(int xClient, int yClient, CCamera* pCamera);
 };

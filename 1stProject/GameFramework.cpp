@@ -80,23 +80,15 @@ void CGameFramework::BuildObjects()
 	m_pPlayer->SetCameraOffset(XMFLOAT3(0.0f, 5.0f, -15.0f));
 
 	ChangeScene(SceneType::Title);
-
-	//m_pScene = new CScene(m_pPlayer);
-	m_pTitleScene = new TitleScene();
-	m_pTitleScene->BuildObjects();
-	//m_pScene->BuildObjects();
 }
 
 void CGameFramework::ReleaseObjects()
 {
 	//if (m_pScene)
-	if (m_pTitleScene)
-	{
-		//m_pScene->ReleaseObjects();
-		m_pTitleScene->ReleaseObjects();
-		delete m_pTitleScene;
-		//delete m_pScene;
-	}
+	//{
+	//	//m_pScene->ReleaseObjects();
+	//	//delete m_pScene;
+	//}
 
 	if (m_pPlayer) delete m_pPlayer;
 }
@@ -105,14 +97,26 @@ void CGameFramework::OnProcessingMouseMessage(HWND hWnd, UINT nMessageID, WPARAM
 {
 	if (m_pScene) m_pScene->OnProcessingMouseMessage(hWnd, nMessageID, wParam, lParam);
 
+	if (m_pCurrentScene) m_pCurrentScene->OnProcessingMouseMessage(hWnd, nMessageID, wParam, lParam);
+
 	switch (nMessageID)
 	{
 	case WM_RBUTTONDOWN:
 	case WM_LBUTTONDOWN:
 		::SetCapture(hWnd);
 		::GetCursorPos(&m_ptOldCursorPos);
-		if (nMessageID == WM_RBUTTONDOWN) m_pLockedObject = m_pScene->PickObjectPointedByCursor(LOWORD(lParam), HIWORD(lParam), m_pPlayer->m_pCamera);
-		break;
+		if (nMessageID == WM_LBUTTONDOWN) {
+			m_pLockedObject = m_pCurrentScene->PickObjectPointedByCursor(LOWORD(lParam), HIWORD(lParam), m_pPlayer->m_pCamera);
+			if (m_pLockedObject) {
+				if (m_pCurrentScene) {
+					if (m_pLockedObject->GetNextScene() == SceneType::End) {
+						::PostQuitMessage(0);
+					}
+					m_pCurrentScene->OnObjectByCursorCollision(m_pLockedObject);
+				}
+			}
+			break;
+		}
 	case WM_LBUTTONUP:
 	case WM_RBUTTONUP:
 		::ReleaseCapture();
@@ -127,6 +131,9 @@ void CGameFramework::OnProcessingMouseMessage(HWND hWnd, UINT nMessageID, WPARAM
 void CGameFramework::OnProcessingKeyboardMessage(HWND hWnd, UINT nMessageID, WPARAM wParam, LPARAM lParam)
 {
 	if (m_pScene) m_pScene->OnProcessingKeyboardMessage(hWnd, nMessageID, wParam, lParam);
+
+	if (m_pCurrentScene) m_pCurrentScene->OnProcessingKeyboardMessage(hWnd, nMessageID, wParam, lParam);
+
 
 	switch (nMessageID)
 	{
@@ -143,7 +150,6 @@ void CGameFramework::OnProcessingKeyboardMessage(HWND hWnd, UINT nMessageID, WPA
 			m_pLockedObject = NULL;
 			break;
 		default:
-			m_pScene->OnProcessingKeyboardMessage(hWnd, nMessageID, wParam, lParam);
 			break;
 		}
 		break;
@@ -221,8 +227,7 @@ void CGameFramework::AnimateObjects()
 {
 	float fTimeElapsed = m_GameTimer.GetTimeElapsed();
 	if (m_pPlayer) m_pPlayer->Animate(fTimeElapsed);
-	//if (m_pScene) m_pScene->Animate(fTimeElapsed);
-	if (m_pTitleScene) m_pTitleScene->Animate(fTimeElapsed);
+	if (m_pCurrentScene) m_pCurrentScene->Animate(fTimeElapsed);
 
 }
 
@@ -237,8 +242,7 @@ void CGameFramework::FrameAdvance()
     ClearFrameBuffer(RGB(255, 255, 255));
 
 	CCamera* pCamera = m_pPlayer->GetCamera();
-	//if (m_pScene) m_pScene->Render(m_hDCFrameBuffer, pCamera);
-	if (m_pTitleScene) m_pTitleScene->Render(m_hDCFrameBuffer, pCamera);
+	if (m_pCurrentScene) m_pCurrentScene->Render(m_hDCFrameBuffer, pCamera);
 
 	PresentFrameBuffer();
 
@@ -246,26 +250,15 @@ void CGameFramework::FrameAdvance()
 	::SetWindowText(m_hWnd, m_pszFrameRate);
 }
 
-void CGameFramework::ChangeScene(SceneType eNextScene)
+void CGameFramework::ChangeScene(SceneType type)
 {
-	switch (eNextScene)
+	if (m_pCurrentScene)
 	{
-	case SceneType::Title:
-		m_pCurrentScene = new TitleScene();
-		break;
-	case SceneType::Menu:
-		break;
-	case SceneType::Tutorial:
-		break;
-	case SceneType::Level_1:
-		break;
-	case SceneType::Level_2:
-		break;
-	case SceneType::Start:
-		break;
-	case SceneType::Exit:
-		break;
-	default:
-		break;
+		delete m_pCurrentScene;
 	}
+
+	m_pCurrentScene = SceneFactory::CreateScene(type, m_pPlayer);
+	m_pCurrentScene->SetFramework(this);
+	m_pCurrentScene->BuildObjects();
+
 }
