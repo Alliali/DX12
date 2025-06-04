@@ -11,16 +11,16 @@ SceneManager* SceneFactory::CreateScene(SceneType type, CPlayer* pPlayer)
 		return new TitleScene(pPlayer);
 	case SceneType::Menu:
 		return new MenuScene(pPlayer);
-	/*case SceneType::Tutorial:
-		return new TutorialScene;
+	case SceneType::Tutorial:
+		return new MenuScene(pPlayer);
 	case SceneType::Level_1:
-		return new Level_1Scene;
+		return new CScene(pPlayer);
 	case SceneType::Level_2:
-		return new Level_2Scene;*/
+		return new CScene(pPlayer);
 	case SceneType::Start:
 		return new CScene(pPlayer);
 	case SceneType::End:
-		::PostQuitMessage(0);
+		return nullptr;
 	default:
 		return nullptr;
 	}

@@ -473,3 +473,412 @@ void CAxisMesh::Render(HDC hDCFrameBuffer)
 	::SelectObject(hDCFrameBuffer, hOldPen);
 	::DeleteObject(hPen);
 }
+
+StartMesh::StartMesh(float fWidth, float fHeight, float fDepth) : CMesh(16)
+{
+	CPolygon* pFace = nullptr;
+	int i = 0;
+	float unit = 1.0f;
+	float thickness = unit * 0.3f;
+	float depth = fDepth * 0.5f;
+	float spacing = unit * 1.4f;
+
+	// 글자 A가 x=0을 기준으로 가운데 오게 조정
+	float startX = -2.0f * spacing;
+
+	// === S ===
+	{
+		float x = startX;
+		// Top bar
+		pFace = new CPolygon(4);
+		pFace->SetVertex(0, CVertex(x + 0, unit, -depth));
+		pFace->SetVertex(1, CVertex(x + unit, unit, -depth));
+		pFace->SetVertex(2, CVertex(x + unit, unit - thickness, -depth));
+		pFace->SetVertex(3, CVertex(x + 0, unit - thickness, -depth));
+		SetPolygon(i++, pFace);
+
+		// Middle bar
+		pFace = new CPolygon(4);
+		pFace->SetVertex(0, CVertex(x + 0, 0.5f * unit + thickness * 0.5f, -depth));
+		pFace->SetVertex(1, CVertex(x + unit, 0.5f * unit + thickness * 0.5f, -depth));
+		pFace->SetVertex(2, CVertex(x + unit, 0.5f * unit - thickness * 0.5f, -depth));
+		pFace->SetVertex(3, CVertex(x + 0, 0.5f * unit - thickness * 0.5f, -depth));
+		SetPolygon(i++, pFace);
+
+		// Bottom bar
+		pFace = new CPolygon(4);
+		pFace->SetVertex(0, CVertex(x + 0, 0, -depth));
+		pFace->SetVertex(1, CVertex(x + unit, 0, -depth));
+		pFace->SetVertex(2, CVertex(x + unit, thickness, -depth));
+		pFace->SetVertex(3, CVertex(x + 0, thickness, -depth));
+		SetPolygon(i++, pFace);
+
+		// Left top vertical
+		pFace = new CPolygon(4);
+		pFace->SetVertex(0, CVertex(x + 0, unit, -depth));
+		pFace->SetVertex(1, CVertex(x + thickness, unit, -depth));
+		pFace->SetVertex(2, CVertex(x + thickness, 0.5f * unit + thickness * 0.5f, -depth));
+		pFace->SetVertex(3, CVertex(x + 0, 0.5f * unit + thickness * 0.5f, -depth));
+		SetPolygon(i++, pFace);
+
+		// Right bottom vertical
+		pFace = new CPolygon(4);
+		pFace->SetVertex(0, CVertex(x + unit - thickness, 0.5f * unit - thickness * 0.5f, -depth));
+		pFace->SetVertex(1, CVertex(x + unit, 0.5f * unit - thickness * 0.5f, -depth));
+		pFace->SetVertex(2, CVertex(x + unit, 0, -depth));
+		pFace->SetVertex(3, CVertex(x + unit - thickness, 0, -depth));
+		SetPolygon(i++, pFace);
+	}
+
+	// === T ===
+	{
+		float x = startX + spacing;
+		// Top bar
+		pFace = new CPolygon(4);
+		pFace->SetVertex(0, CVertex(x + 0, unit, -depth));
+		pFace->SetVertex(1, CVertex(x + unit, unit, -depth));
+		pFace->SetVertex(2, CVertex(x + unit, unit - thickness, -depth));
+		pFace->SetVertex(3, CVertex(x + 0, unit - thickness, -depth));
+		SetPolygon(i++, pFace);
+
+		// Middle vertical
+		pFace = new CPolygon(4);
+		pFace->SetVertex(0, CVertex(x + 0.5f * unit - thickness * 0.5f, unit, -depth));
+		pFace->SetVertex(1, CVertex(x + 0.5f * unit + thickness * 0.5f, unit, -depth));
+		pFace->SetVertex(2, CVertex(x + 0.5f * unit + thickness * 0.5f, 0, -depth));
+		pFace->SetVertex(3, CVertex(x + 0.5f * unit - thickness * 0.5f, 0, -depth));
+		SetPolygon(i++, pFace);
+	}
+
+	// === A ===
+	{
+		float x = startX + spacing * 2;
+		// Left slant
+		pFace = new CPolygon(4);
+		pFace->SetVertex(0, CVertex(x + 0, 0, -depth));
+		pFace->SetVertex(1, CVertex(x + thickness, 0, -depth));
+		pFace->SetVertex(2, CVertex(x + 0.5f * unit, unit, -depth));
+		pFace->SetVertex(3, CVertex(x + 0.5f * unit - thickness, unit, -depth));
+		SetPolygon(i++, pFace);
+
+		// Right slant
+		pFace = new CPolygon(4);
+		pFace->SetVertex(0, CVertex(x + 0.5f * unit + thickness, unit, -depth));
+		pFace->SetVertex(1, CVertex(x + 0.5f * unit, unit, -depth));
+		pFace->SetVertex(2, CVertex(x + unit - thickness, 0, -depth));
+		pFace->SetVertex(3, CVertex(x + unit, 0, -depth));
+		SetPolygon(i++, pFace);
+
+		// Middle bar
+		pFace = new CPolygon(4);
+		pFace->SetVertex(0, CVertex(x + thickness, 0.5f * unit, -depth));
+		pFace->SetVertex(1, CVertex(x + unit - thickness, 0.5f * unit, -depth));
+		pFace->SetVertex(2, CVertex(x + unit - thickness, 0.5f * unit + thickness, -depth));
+		pFace->SetVertex(3, CVertex(x + thickness, 0.5f * unit + thickness, -depth));
+		SetPolygon(i++, pFace);
+	}
+
+	// === R ===
+	{
+		float x = startX + spacing * 3;
+		// Vertical bar
+		pFace = new CPolygon(4);
+		pFace->SetVertex(0, CVertex(x + 0, 0, -depth));
+		pFace->SetVertex(1, CVertex(x + thickness, 0, -depth));
+		pFace->SetVertex(2, CVertex(x + thickness, unit, -depth));
+		pFace->SetVertex(3, CVertex(x + 0, unit, -depth));
+		SetPolygon(i++, pFace);
+
+		// Top horizontal
+		pFace = new CPolygon(4);
+		pFace->SetVertex(0, CVertex(x + thickness, unit, -depth));
+		pFace->SetVertex(1, CVertex(x + unit, unit, -depth));
+		pFace->SetVertex(2, CVertex(x + unit, unit - thickness, -depth));
+		pFace->SetVertex(3, CVertex(x + thickness, unit - thickness, -depth));
+		SetPolygon(i++, pFace);
+
+		// Middle horizontal
+		pFace = new CPolygon(4);
+		pFace->SetVertex(0, CVertex(x + thickness, 0.5f * unit, -depth));
+		pFace->SetVertex(1, CVertex(x + unit, 0.5f * unit, -depth));
+		pFace->SetVertex(2, CVertex(x + unit, 0.5f * unit + thickness, -depth));
+		pFace->SetVertex(3, CVertex(x + thickness, 0.5f * unit + thickness, -depth));
+		SetPolygon(i++, pFace);
+
+		// Diagonal leg
+		pFace = new CPolygon(4);
+		pFace->SetVertex(0, CVertex(x + thickness, 0.5f * unit, -depth));
+		pFace->SetVertex(1, CVertex(x + unit, 0, -depth));
+		pFace->SetVertex(2, CVertex(x + unit - thickness, 0, -depth));
+		pFace->SetVertex(3, CVertex(x + thickness, 0.5f * unit - thickness, -depth));
+		SetPolygon(i++, pFace);
+	}
+
+	// === T (마지막) ===
+	{
+		float x = startX + spacing * 4;
+		// Top bar
+		pFace = new CPolygon(4);
+		pFace->SetVertex(0, CVertex(x + 0, unit, -depth));
+		pFace->SetVertex(1, CVertex(x + unit, unit, -depth));
+		pFace->SetVertex(2, CVertex(x + unit, unit - thickness, -depth));
+		pFace->SetVertex(3, CVertex(x + 0, unit - thickness, -depth));
+		SetPolygon(i++, pFace);
+
+		// Middle vertical
+		pFace = new CPolygon(4);
+		pFace->SetVertex(0, CVertex(x + 0.5f * unit - thickness * 0.5f, unit, -depth));
+		pFace->SetVertex(1, CVertex(x + 0.5f * unit + thickness * 0.5f, unit, -depth));
+		pFace->SetVertex(2, CVertex(x + 0.5f * unit + thickness * 0.5f, 0, -depth));
+		pFace->SetVertex(3, CVertex(x + 0.5f * unit - thickness * 0.5f, 0, -depth));
+		SetPolygon(i++, pFace);
+	}
+}
+
+NameMesh::NameMesh(float fWidth, float fHeight, float fDepth) : CMesh(26) // 9글자 정도 × 평균 4~5개 polygon
+{
+	CPolygon* pFace = nullptr;
+	int i = 0;
+	float unit = 2.0f; // 이전보다 2배 키운 크기
+	float thickness = unit * 0.3f;
+	float depth = fDepth * 0.5f;
+
+	float spacing = unit * 1.2f;
+	float offsetX = 0;
+
+	// 'L'
+	{
+		float baseX = offsetX;
+		// Vertical bar
+		pFace = new CPolygon(4);
+		pFace->SetVertex(0, CVertex(baseX, 0, -depth));
+		pFace->SetVertex(1, CVertex(baseX + thickness, 0, -depth));
+		pFace->SetVertex(2, CVertex(baseX + thickness, unit, -depth));
+		pFace->SetVertex(3, CVertex(baseX, unit, -depth));
+		SetPolygon(i++, pFace);
+
+		// Bottom bar
+		pFace = new CPolygon(4);
+		pFace->SetVertex(0, CVertex(baseX, 0, -depth));
+		pFace->SetVertex(1, CVertex(baseX + unit, 0, -depth));
+		pFace->SetVertex(2, CVertex(baseX + unit, thickness, -depth));
+		pFace->SetVertex(3, CVertex(baseX, thickness, -depth));
+		SetPolygon(i++, pFace);
+
+		offsetX += spacing;
+	}
+
+	// 'e'
+	{
+		float baseX = offsetX;
+		// Horizontal bars (top, middle, bottom)
+		for (int j = 0; j < 3; j++) {
+			float y = unit - j * unit * 0.5f;
+			pFace = new CPolygon(4);
+			pFace->SetVertex(0, CVertex(baseX, y, -depth));
+			pFace->SetVertex(1, CVertex(baseX + unit, y, -depth));
+			pFace->SetVertex(2, CVertex(baseX + unit, y - thickness, -depth));
+			pFace->SetVertex(3, CVertex(baseX, y - thickness, -depth));
+			SetPolygon(i++, pFace);
+		}
+		// Left vertical bar
+		pFace = new CPolygon(4);
+		pFace->SetVertex(0, CVertex(baseX, 0, -depth));
+		pFace->SetVertex(1, CVertex(baseX + thickness, 0, -depth));
+		pFace->SetVertex(2, CVertex(baseX + thickness, unit, -depth));
+		pFace->SetVertex(3, CVertex(baseX, unit, -depth));
+		SetPolygon(i++, pFace);
+
+		offsetX += spacing;
+	}
+
+	// 두 번째 'e' (같은 방식)
+	{
+		float baseX = offsetX;
+		// Horizontal bars (top, middle, bottom)
+		for (int j = 0; j < 3; j++) {
+			float y = unit - j * unit * 0.5f;
+			pFace = new CPolygon(4);
+			pFace->SetVertex(0, CVertex(baseX, y, -depth));
+			pFace->SetVertex(1, CVertex(baseX + unit, y, -depth));
+			pFace->SetVertex(2, CVertex(baseX + unit, y - thickness, -depth));
+			pFace->SetVertex(3, CVertex(baseX, y - thickness, -depth));
+			SetPolygon(i++, pFace);
+		}
+		// Left vertical bar
+		pFace = new CPolygon(4);
+		pFace->SetVertex(0, CVertex(baseX, 0, -depth));
+		pFace->SetVertex(1, CVertex(baseX + thickness, 0, -depth));
+		pFace->SetVertex(2, CVertex(baseX + thickness, unit, -depth));
+		pFace->SetVertex(3, CVertex(baseX, unit, -depth));
+		SetPolygon(i++, pFace);
+
+		offsetX += spacing;
+	}
+
+	// 'y'
+	{
+		float baseX = offsetX;
+
+		// 상단 좌우 대각선
+		pFace = new CPolygon(4); // Left diagonal
+		pFace->SetVertex(0, CVertex(baseX, unit, -depth));
+		pFace->SetVertex(1, CVertex(baseX + thickness, unit, -depth));
+		pFace->SetVertex(2, CVertex(baseX + unit * 0.5f + thickness, unit * 0.5f, -depth));
+		pFace->SetVertex(3, CVertex(baseX + unit * 0.5f, unit * 0.5f, -depth));
+		SetPolygon(i++, pFace);
+
+		pFace = new CPolygon(4); // Right diagonal
+		pFace->SetVertex(0, CVertex(baseX + unit - thickness, unit, -depth));
+		pFace->SetVertex(1, CVertex(baseX + unit, unit, -depth));
+		pFace->SetVertex(2, CVertex(baseX + unit * 0.5f + thickness, unit * 0.5f, -depth));
+		pFace->SetVertex(3, CVertex(baseX + unit * 0.5f, unit * 0.5f, -depth));
+		SetPolygon(i++, pFace);
+
+		// Bottom vertical
+		pFace = new CPolygon(4);
+		pFace->SetVertex(0, CVertex(baseX + unit * 0.5f, 0, -depth));
+		pFace->SetVertex(1, CVertex(baseX + unit * 0.5f + thickness, 0, -depth));
+		pFace->SetVertex(2, CVertex(baseX + unit * 0.5f + thickness, unit * 0.5f, -depth));
+		pFace->SetVertex(3, CVertex(baseX + unit * 0.5f, unit * 0.5f, -depth));
+		SetPolygon(i++, pFace);
+
+		offsetX += spacing;
+	}
+
+	// 'u'
+	{
+		float baseX = offsetX;
+
+		// Left bar
+		pFace = new CPolygon(4);
+		pFace->SetVertex(0, CVertex(baseX, thickness, -depth));
+		pFace->SetVertex(1, CVertex(baseX + thickness, thickness, -depth));
+		pFace->SetVertex(2, CVertex(baseX + thickness, unit, -depth));
+		pFace->SetVertex(3, CVertex(baseX, unit, -depth));
+		SetPolygon(i++, pFace);
+
+		// Right bar
+		pFace = new CPolygon(4);
+		pFace->SetVertex(0, CVertex(baseX + unit - thickness, thickness, -depth));
+		pFace->SetVertex(1, CVertex(baseX + unit, thickness, -depth));
+		pFace->SetVertex(2, CVertex(baseX + unit, unit, -depth));
+		pFace->SetVertex(3, CVertex(baseX + unit - thickness, unit, -depth));
+		SetPolygon(i++, pFace);
+
+		// Bottom bar
+		pFace = new CPolygon(4);
+		pFace->SetVertex(0, CVertex(baseX + thickness, 0, -depth));
+		pFace->SetVertex(1, CVertex(baseX + unit - thickness, 0, -depth));
+		pFace->SetVertex(2, CVertex(baseX + unit - thickness, thickness, -depth));
+		pFace->SetVertex(3, CVertex(baseX + thickness, thickness, -depth));
+		SetPolygon(i++, pFace);
+
+		offsetX += spacing;
+	}
+
+	// 'n'
+	{
+		float baseX = offsetX;
+
+		// Left bar
+		pFace = new CPolygon(4);
+		pFace->SetVertex(0, CVertex(baseX, 0, -depth));
+		pFace->SetVertex(1, CVertex(baseX + thickness, 0, -depth));
+		pFace->SetVertex(2, CVertex(baseX + thickness, unit, -depth));
+		pFace->SetVertex(3, CVertex(baseX, unit, -depth));
+		SetPolygon(i++, pFace);
+
+		// Right bar
+		pFace = new CPolygon(4);
+		pFace->SetVertex(0, CVertex(baseX + unit - thickness, 0, -depth));
+		pFace->SetVertex(1, CVertex(baseX + unit, 0, -depth));
+		pFace->SetVertex(2, CVertex(baseX + unit, unit, -depth));
+		pFace->SetVertex(3, CVertex(baseX + unit - thickness, unit, -depth));
+		SetPolygon(i++, pFace);
+
+		// Diagonal middle bar
+		pFace = new CPolygon(4);
+		pFace->SetVertex(0, CVertex(baseX + thickness, unit, -depth));
+		pFace->SetVertex(1, CVertex(baseX + thickness + thickness, unit, -depth));
+		pFace->SetVertex(2, CVertex(baseX + unit - thickness, 0, -depth));
+		pFace->SetVertex(3, CVertex(baseX + unit - thickness - thickness, 0, -depth));
+		SetPolygon(i++, pFace);
+
+		offsetX += spacing;
+	}
+
+	// 'G'
+	{
+		float baseX = offsetX;
+
+		// Top bar
+		pFace = new CPolygon(4);
+		pFace->SetVertex(0, CVertex(baseX + thickness, unit, -depth));
+		pFace->SetVertex(1, CVertex(baseX + unit, unit, -depth));
+		pFace->SetVertex(2, CVertex(baseX + unit, unit - thickness, -depth));
+		pFace->SetVertex(3, CVertex(baseX + thickness, unit - thickness, -depth));
+		SetPolygon(i++, pFace);
+
+		// Left vertical bar
+		pFace = new CPolygon(4);
+		pFace->SetVertex(0, CVertex(baseX, unit, -depth));
+		pFace->SetVertex(1, CVertex(baseX + thickness, unit, -depth));
+		pFace->SetVertex(2, CVertex(baseX + thickness, 0, -depth));
+		pFace->SetVertex(3, CVertex(baseX, 0, -depth));
+		SetPolygon(i++, pFace);
+
+		// Bottom bar
+		pFace = new CPolygon(4);
+		pFace->SetVertex(0, CVertex(baseX + thickness, 0, -depth));
+		pFace->SetVertex(1, CVertex(baseX + unit, 0, -depth));
+		pFace->SetVertex(2, CVertex(baseX + unit, thickness, -depth));
+		pFace->SetVertex(3, CVertex(baseX + thickness, thickness, -depth));
+		SetPolygon(i++, pFace);
+
+		// Inner middle bar (right)
+		pFace = new CPolygon(4);
+		pFace->SetVertex(0, CVertex(baseX + 0.5f * unit, 0.5f * unit - 0.5f * thickness, -depth));
+		pFace->SetVertex(1, CVertex(baseX + unit, 0.5f * unit - 0.5f * thickness, -depth));
+		pFace->SetVertex(2, CVertex(baseX + unit, 0.5f * unit + 0.5f * thickness, -depth));
+		pFace->SetVertex(3, CVertex(baseX + 0.5f * unit, 0.5f * unit + 0.5f * thickness, -depth));
+		SetPolygon(i++, pFace);
+
+		offsetX += spacing;
+	}
+
+	// 'I'
+	{
+		float baseX = offsetX;
+
+		// Top bar
+		pFace = new CPolygon(4);
+		pFace->SetVertex(0, CVertex(baseX, unit - thickness, -depth));
+		pFace->SetVertex(1, CVertex(baseX + unit, unit - thickness, -depth));
+		pFace->SetVertex(2, CVertex(baseX + unit, unit, -depth));
+		pFace->SetVertex(3, CVertex(baseX, unit, -depth));
+		SetPolygon(i++, pFace);
+
+		// Bottom bar
+		pFace = new CPolygon(4);
+		pFace->SetVertex(0, CVertex(baseX, 0, -depth));
+		pFace->SetVertex(1, CVertex(baseX + unit, 0, -depth));
+		pFace->SetVertex(2, CVertex(baseX + unit, thickness, -depth));
+		pFace->SetVertex(3, CVertex(baseX, thickness, -depth));
+		SetPolygon(i++, pFace);
+
+		// Vertical bar
+		pFace = new CPolygon(4);
+		pFace->SetVertex(0, CVertex(baseX + 0.5f * unit - 0.5f * thickness, thickness, -depth));
+		pFace->SetVertex(1, CVertex(baseX + 0.5f * unit + 0.5f * thickness, thickness, -depth));
+		pFace->SetVertex(2, CVertex(baseX + 0.5f * unit + 0.5f * thickness, unit - thickness, -depth));
+		pFace->SetVertex(3, CVertex(baseX + 0.5f * unit - 0.5f * thickness, unit - thickness, -depth));
+		SetPolygon(i++, pFace);
+
+		offsetX += spacing;
+	}
+
+
+}
+
+

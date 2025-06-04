@@ -75,6 +75,16 @@ void MenuScene::BuildObjects()
 	m_ppObjects[4]->SetRotationSpeed(90.0f);
 	m_ppObjects[4]->SetNextScene(SceneType::End);
 
+	StartMesh* pStartMesh = new StartMesh(4.0f, 4.0f, 4.0f);
+	
+	m_ppTextObjects = new CGameObject * [1];
+
+	m_ppTextObjects[0] = new CGameObject();
+	m_ppTextObjects[0]->SetMesh(pStartMesh);
+	m_ppTextObjects[0]->SetColor(RGB(255, 0, 0));
+	m_ppTextObjects[0]->SetPosition(15.0f, 0.0f, 14.0f);
+	m_ppTextObjects[0]->SetRotationAxis(XMFLOAT3(0.0f, 1.0f, 0.0f));
+	m_ppTextObjects[0]->SetRotationSpeed(90.0f);
 	
 	m_pExplosiveObject = static_cast<CExplosiveObject*>(m_ppObjects[0]);
 
@@ -88,6 +98,7 @@ void MenuScene::BuildObjects()
 void MenuScene::Animate(float fElapsedTime)
 {
 	m_pWallsObject->Animate(fElapsedTime);
+	m_ppTextObjects[0]->Animate(fElapsedTime);
 	for (int i = 0; i < 5; i++) {
 		m_ppObjects[i]->Animate(fElapsedTime);
 	}
@@ -98,6 +109,7 @@ void MenuScene::Animate(float fElapsedTime)
 			m_pFramework->ChangeScene(m_pExplosiveObject->GetNextScene());
 		}
 	}
+	
 }
 
 void MenuScene::Render(HDC hDCFrameBuffer, CCamera* pCamera)
@@ -110,6 +122,7 @@ void MenuScene::Render(HDC hDCFrameBuffer, CCamera* pCamera)
 	for (int i = 0; i < 5; i++) {
 		m_ppObjects[i]->Render(hDCFrameBuffer, pCamera);
 	}
+	m_ppTextObjects[0]->Render(hDCFrameBuffer, pCamera);
 }
 
 void MenuScene::OnProcessingMouseMessage(HWND hWnd, UINT nMessageID, WPARAM wParam, LPARAM lParam)

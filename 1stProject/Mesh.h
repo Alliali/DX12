@@ -86,3 +86,17 @@ public:
 
 	virtual void Render(HDC hDCFrameBuffer);
 };
+
+class StartMesh : public CMesh
+{
+public:
+	StartMesh(float fWidth = 4.0f, float fHeight = 4.0f, float fDepth = 4.0f);
+	virtual ~StartMesh() { }
+};
+
+class NameMesh : public CMesh
+{
+public:
+	NameMesh(float fWidth = 4.0f, float fHeight = 4.0f, float fDepth = 4.0f);
+	virtual ~NameMesh() { }
+};
