@@ -240,10 +240,10 @@ CAirplanePlayer::CAirplanePlayer(ID3D12Device *pd3dDevice, ID3D12GraphicsCommand
 	m_pCamera = ChangeCamera(/*SPACESHIP_CAMERA*/THIRD_PERSON_CAMERA, 0.0f);
 
 //	CGameObject *pGameObject = CGameObject::LoadGeometryFromFile(pd3dDevice, pd3dCommandList, pd3dGraphicsRootSignature, "Model/Apache.bin");
-	CGameObject *pGameObject = CGameObject::LoadGeometryFromFile(pd3dDevice, pd3dCommandList, pd3dGraphicsRootSignature, "Model/Gunship.bin");
+	CGameObject *pGameObject = CGameObject::LoadGeometryFromFile(pd3dDevice, pd3dCommandList, pd3dGraphicsRootSignature, "Model/M26.bin");
 
 	pGameObject->Rotate(15.0f, 0.0f, 0.0f);
-	pGameObject->SetScale(8.5f, 8.5f, 8.5f);
+	pGameObject->SetScale(10.0f, 10.0f, 10.0f);
 	SetChild(pGameObject, true);
 
 	OnInitialize();
@@ -257,24 +257,16 @@ CAirplanePlayer::~CAirplanePlayer()
 
 void CAirplanePlayer::OnInitialize()
 {
-//	m_pMainRotorFrame = FindFrame("rotor");
-//	m_pTailRotorFrame = FindFrame("black_m_7");
-
-	m_pMainRotorFrame = FindFrame("Rotor");
-	m_pTailRotorFrame = FindFrame("Back_Rotor");
+	m_pTurretFrame = FindFrame("TURRET");	// 포신 회전
+	m_pCannonFrame = FindFrame("cannon");	// 포신 위치
 }
 
 void CAirplanePlayer::Animate(float fTimeElapsed, XMFLOAT4X4 *pxmf4x4Parent)
 {
-	if (m_pMainRotorFrame)
+	if (m_pTurretFrame) // 포신 마우스 따라가게 하려면 여기 회전을 마우스 위치를 알게 해야함
 	{
-		XMMATRIX xmmtxRotate = XMMatrixRotationY(XMConvertToRadians(360.0f * 2.0f) * fTimeElapsed);
-		m_pMainRotorFrame->m_xmf4x4Transform = Matrix4x4::Multiply(xmmtxRotate, m_pMainRotorFrame->m_xmf4x4Transform);
-	}
-	if (m_pTailRotorFrame)
-	{
-		XMMATRIX xmmtxRotate = XMMatrixRotationX(XMConvertToRadians(360.0f * 4.0f) * fTimeElapsed);
-		m_pTailRotorFrame->m_xmf4x4Transform = Matrix4x4::Multiply(xmmtxRotate, m_pTailRotorFrame->m_xmf4x4Transform);
+		XMMATRIX xmmtxRotate = XMMatrixRotationY(XMConvertToRadians(30.0f) * fTimeElapsed);
+		m_pTurretFrame->m_xmf4x4Transform = Matrix4x4::Multiply(xmmtxRotate, m_pTurretFrame->m_xmf4x4Transform);
 	}
 
 	CPlayer::Animate(fTimeElapsed, pxmf4x4Parent);
@@ -322,7 +314,7 @@ CCamera *CAirplanePlayer::ChangeCamera(DWORD nNewCameraMode, float fTimeElapsed)
 			SetMaxVelocityY(40.0f);
 			m_pCamera = OnChangeCamera(THIRD_PERSON_CAMERA, nCurrentCameraMode);
 			m_pCamera->SetTimeLag(0.25f);
-			m_pCamera->SetOffset(XMFLOAT3(0.0f, 105.0f, -140.0f));
+			m_pCamera->SetOffset(XMFLOAT3(0.0f, 180.0f, -180.0f));
 			m_pCamera->GenerateProjectionMatrix(1.01f, 5000.0f, ASPECT_RATIO, 60.0f);
 			m_pCamera->SetViewport(0, 0, FRAME_BUFFER_WIDTH, FRAME_BUFFER_HEIGHT, 0.0f, 1.0f);
 			m_pCamera->SetScissorRect(0, 0, FRAME_BUFFER_WIDTH, FRAME_BUFFER_HEIGHT);
