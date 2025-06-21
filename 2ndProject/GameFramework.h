@@ -41,7 +41,11 @@ public:
 	void OnProcessingKeyboardMessage(HWND hWnd, UINT nMessageID, WPARAM wParam, LPARAM lParam);
 	LRESULT CALLBACK OnProcessingWindowMessage(HWND hWnd, UINT nMessageID, WPARAM wParam, LPARAM lParam);
 
+	void SetActive(bool bActive) { m_bActive = bActive; }
+
 private:
+	bool						m_bActive = true;
+
 	HINSTANCE					m_hInstance;
 	HWND						m_hWnd; 
 
@@ -83,6 +87,7 @@ private:
 	CScene						*m_pScene = NULL;
 	CPlayer						*m_pPlayer = NULL;
 	CCamera						*m_pCamera = NULL;
+	CGameObject					*m_pLockedObject = NULL;
 
 	POINT						m_ptOldCursorPos;
 

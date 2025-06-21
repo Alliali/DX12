@@ -237,6 +237,17 @@ void CPlayer::Render(ID3D12GraphicsCommandList *pd3dCommandList, CCamera *pCamer
 
 CAirplanePlayer::CAirplanePlayer(ID3D12Device *pd3dDevice, ID3D12GraphicsCommandList *pd3dCommandList, ID3D12RootSignature *pd3dGraphicsRootSignature)
 {
+	CCubeMesh* pShellMesh = new CCubeMesh(pd3dDevice, pd3dCommandList, 10.0f, 10.0f, 10.0f);
+	for (int i = 0; i < SHELL; i++)
+	{
+		m_ppShells[i] = new CBulletObject(m_fShellEffectiveRange);
+		m_ppShells[i]->SetMesh(pShellMesh);
+		//m_ppShells[i]->SetRotationAxis(XMFLOAT3(0.0f, 1.0f, 0.0f));
+		//m_ppShells[i]->SetRotationSpeed(360.0f);
+		m_ppShells[i]->SetMovingSpeed(120.0f);
+		m_ppShells[i]->SetActive(false);
+	}
+
 	m_pCamera = ChangeCamera(/*SPACESHIP_CAMERA*/THIRD_PERSON_CAMERA, 0.0f);
 
 //	CGameObject *pGameObject = CGameObject::LoadGeometryFromFile(pd3dDevice, pd3dCommandList, pd3dGraphicsRootSignature, "Model/Apache.bin");
@@ -253,6 +264,39 @@ CAirplanePlayer::CAirplanePlayer(ID3D12Device *pd3dDevice, ID3D12GraphicsCommand
 
 CAirplanePlayer::~CAirplanePlayer()
 {
+	for (int i = 0; i < SHELL; i++) if (m_ppShells[i]) delete m_ppShells[i];
+}
+
+void CAirplanePlayer::FireShell(CGameObject* pLockedObject)
+{
+	CBulletObject* pShellObject = NULL;
+	for (int i = 0; i < SHELL; i++)
+	{
+		if (!m_ppShells[i]->m_bActive)
+		{
+			pShellObject = m_ppShells[i];
+			break;
+		}
+	}
+
+	if (pShellObject)
+	{
+		XMFLOAT3 xmf3Position = GetPosition();
+		XMFLOAT3 xmf3Direction = GetLook();
+		XMFLOAT3 xmf3FirePosition = Vector3::Add(xmf3Position, Vector3::ScalarProduct(xmf3Direction, 6.0f, false));
+
+		pShellObject->m_xmf4x4World = m_xmf4x4World;
+
+		pShellObject->SetFirePosition(xmf3FirePosition);
+		pShellObject->SetMovingDirection(xmf3Direction);
+		pShellObject->SetColor(RGB(255, 0, 0));
+		pShellObject->SetActive(true);
+
+		if (pLockedObject)
+		{
+			pShellObject->m_pLockedObject = pLockedObject;
+		}
+	}
 }
 
 void CAirplanePlayer::OnInitialize()
@@ -270,6 +314,22 @@ void CAirplanePlayer::Animate(float fTimeElapsed, XMFLOAT4X4 *pxmf4x4Parent)
 	}
 
 	CPlayer::Animate(fTimeElapsed, pxmf4x4Parent);
+
+	for (int i = 0; i < SHELL; i++)
+	{
+		if (m_ppShells[i]->m_bActive) m_ppShells[i]->Animate(fTimeElapsed, pxmf4x4Parent);
+	}
+}
+
+void CAirplanePlayer::Render(ID3D12GraphicsCommandList* pd3dCommandList, CCamera* pCamera)
+{
+	CPlayer::Render(pd3dCommandList, pCamera);
+
+	for (int i = 0; i < SHELL; i++) {
+		if (m_ppShells[i]->m_bActive) {
+			m_ppShells[i]->Render(pd3dCommandList, pCamera);
+		}
+	}
 }
 
 void CAirplanePlayer::OnPrepareRender()

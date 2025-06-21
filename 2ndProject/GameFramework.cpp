@@ -314,6 +314,10 @@ void CGameFramework::OnProcessingKeyboardMessage(HWND hWnd, UINT nMessageID, WPA
 					break;
 				case VK_RETURN:
 					break;
+				case VK_CONTROL:
+					((CAirplanePlayer*)m_pPlayer)->FireShell(m_pLockedObject);
+					m_pLockedObject = NULL;
+					break;
 				case VK_F1:
 				case VK_F2:
 				case VK_F3:

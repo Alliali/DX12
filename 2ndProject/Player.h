@@ -81,6 +81,8 @@ public:
 	virtual void Render(ID3D12GraphicsCommandList *pd3dCommandList, CCamera *pCamera = NULL);
 };
 
+#define SHELL 50
+
 class CAirplanePlayer : public CPlayer
 {
 public:
@@ -90,9 +92,15 @@ public:
 	CGameObject*				m_pTurretFrame = NULL;
 	CGameObject*				m_pCannonFrame = NULL;
 
+	float						m_fShellEffectiveRange = 150.0f;
+	CBulletObject*				m_ppShells[SHELL];
+
+	void FireShell(CGameObject* pLockedObject);
+
 private:
 	virtual void OnInitialize();
 	virtual void Animate(float fTimeElapsed, XMFLOAT4X4 *pxmf4x4Parent = NULL);
+	virtual void Render(ID3D12GraphicsCommandList* pd3dCommandList, CCamera* pCamera = NULL);
 
 public:
 	virtual CCamera *ChangeCamera(DWORD nNewCameraMode, float fTimeElapsed);
