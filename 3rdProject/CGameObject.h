@@ -6,7 +6,7 @@ class CShader;
 class CGameObject
 {
 public:
-	CGameObject(int nMeshes=1);	//따라하기15 변경
+	CGameObject(int nMeshes=1);	
 	virtual ~CGameObject();
 
 private:
@@ -18,16 +18,15 @@ public:
 
 protected:
 	XMFLOAT4X4 m_xmf4x4World;
-	//CMesh* m_pMesh = NULL; 따라하기 15 삭제
-//게임 객체는 여러 개의 메쉬를 포함하는 경우 게임 객체가 가지는 메쉬들에 대한 포인터와 그 개수이다. 따라하기 15
+	
 	CMesh 	**m_ppMeshes = NULL;
 	int		m_nMeshes = 0;
+	CMesh* m_pMesh = NULL;
 
 	CShader* m_pShader = NULL;
 
 public:
 	void ReleaseUploadBuffers();
-	///virtual void SetMesh(CMesh* pMesh); 따라하기 15변경
 	void SetMesh(int nIndex, CMesh* pMesh);
 	virtual void SetShader(CShader* pShader);
 
@@ -61,6 +60,20 @@ public:
 //게임 객체를 회전(x-축, y-축, z-축)한다. 
 	void Rotate(float fPitch = 10.0f, float fYaw = 10.0f, float fRoll = 10.0f);
 	void Rotate(XMFLOAT3* pxmf3Axis, float fAngle);
+
+//과제
+public: 
+	float m_fMovingSpeed = 0.0f;	//게임 객체의 이동 속도(초당 이동 거리)
+	XMFLOAT3 m_xmf3MovingDirection = XMFLOAT3(0.0f, 0.0f, 1.0f);
+	bool							m_bActive = true;
+	
+	DWORD							m_dwColor = RGB(255, 0, 0);
+
+	void SetMovingSpeed(float fSpeed) { m_fMovingSpeed = fSpeed; }
+	void SetMovingDirection(XMFLOAT3& xmf3MovingDirection) { m_xmf3MovingDirection = Vector3::Normalize(xmf3MovingDirection); }
+	void SetColor(DWORD dwColor) { m_dwColor = dwColor; }
+	void SetActive(bool bActive) { m_bActive = bActive; }
+
 };
 
 class CRotatingObject : public CGameObject
@@ -116,4 +129,28 @@ public:
 //지형의 크기(가로/세로)를 반환한다. 높이 맵의 크기에 스케일을 곱한 값이다.
 	float GetWidth() { return(m_nWidth * m_xmf3Scale.x); }
 	float GetLength() { return(m_nLength * m_xmf3Scale.z); }
+};
+
+class CShellObject : public CGameObject
+{
+public:
+	CShellObject(float fEffectiveRange);
+	virtual ~CShellObject();
+
+public:
+	virtual void Animate(float fElapsedTime);
+
+	float						m_fBulletEffectiveRange = 50.0f;
+	float						m_fMovingDistance = 0.0f;
+	float						m_fRotationAngle = 0.0f;
+	XMFLOAT3					m_xmf3FirePosition = XMFLOAT3(0.0f, 0.0f, 1.0f);
+
+	float						m_fElapsedTimeAfterFire = 0.0f;
+	float						m_fLockingDelayTime = 0.3f;
+	float						m_fLockingTime = 4.0f;
+	CGameObject* m_pLockedObject = NULL;
+
+	void SetWorldMatrix(const XMFLOAT4X4 xmf4x4World) { m_xmf4x4World = xmf4x4World; }
+	void SetFirePosition(XMFLOAT3 xmf3FirePosition);
+	void Reset();
 };

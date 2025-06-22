@@ -51,9 +51,6 @@ void CGameObject::ReleaseUploadBuffers()
 
 void CGameObject::SetMesh(int nIndex, CMesh* pMesh)
 {
-	//if (m_pMesh) m_pMesh->Release(); 따라하기 15 변경
-	//m_pMesh = pMesh;
-	//if (m_pMesh) m_pMesh->AddRef();
 	if (m_ppMeshes)
 	{
 		if (m_ppMeshes[nIndex]) m_ppMeshes[nIndex]->Release();
@@ -265,4 +262,63 @@ CHeightMapTerrain::CHeightMapTerrain(ID3D12Device* pd3dDevice, ID3D12GraphicsCom
 CHeightMapTerrain::~CHeightMapTerrain()
 {
 	if (m_pHeightMapImage) delete m_pHeightMapImage;
+}
+
+CShellObject::CShellObject(float fEffectiveRange)
+{
+	m_fBulletEffectiveRange = fEffectiveRange;
+}
+
+CShellObject::~CShellObject()
+{
+}
+
+void CShellObject::Animate(float fElapsedTime)
+{
+	m_fElapsedTimeAfterFire += fElapsedTime;
+
+	float fDistance = m_fMovingSpeed * fElapsedTime;
+
+	if ((m_fElapsedTimeAfterFire > m_fLockingDelayTime) && m_pLockedObject)
+	{
+		XMFLOAT3 xmf3Position = GetPosition();
+		XMVECTOR xmvPosition = XMLoadFloat3(&xmf3Position);
+
+		XMFLOAT3 xmf3LockedObjectPosition = m_pLockedObject->GetPosition();
+		XMVECTOR xmvLockedObjectPosition = XMLoadFloat3(&xmf3LockedObjectPosition);
+		XMVECTOR xmvToLockedObject = xmvLockedObjectPosition - xmvPosition;
+		xmvToLockedObject = XMVector3Normalize(xmvToLockedObject);
+
+		XMVECTOR xmvMovingDirection = XMLoadFloat3(&m_xmf3MovingDirection);
+		xmvMovingDirection = XMVector3Normalize(XMVectorLerp(xmvMovingDirection, xmvToLockedObject, 0.25f));
+		XMStoreFloat3(&m_xmf3MovingDirection, xmvMovingDirection);
+	}
+
+	XMFLOAT4X4 mtxRotate = Matrix4x4::RotationYawPitchRoll(0.0f, 0.0f, 0.0f);
+	m_xmf4x4World = Matrix4x4::Multiply(mtxRotate, m_xmf4x4World);
+	XMFLOAT3 xmf3Movement = Vector3::ScalarProduct(m_xmf3MovingDirection, fDistance, false);
+	XMFLOAT3 xmf3Position = GetPosition();
+	xmf3Position = Vector3::Add(xmf3Position, xmf3Movement);
+	SetPosition(xmf3Position);
+	m_fMovingDistance += fDistance;
+
+	if ((m_fMovingDistance > m_fBulletEffectiveRange) || (m_fElapsedTimeAfterFire > m_fLockingTime)) Reset();
+
+	//CGameObject::Animate(fElapsedTime);
+}
+
+void CShellObject::SetFirePosition(XMFLOAT3 xmf3FirePosition)
+{
+	m_xmf3FirePosition = xmf3FirePosition;
+	SetPosition(xmf3FirePosition);
+}
+
+void CShellObject::Reset()
+{
+	m_pLockedObject = NULL;
+	m_fElapsedTimeAfterFire = 0;
+	m_fMovingDistance = 0;
+	m_fRotationAngle = 0.0f;
+
+	m_bActive = false;
 }

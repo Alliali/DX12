@@ -119,6 +119,8 @@ public:
 	virtual void OnPrepareRender();
 };
 
+#define SHELL 50
+
 class CTerrainPlayer : public CPlayer
 {
 public:
@@ -130,4 +132,13 @@ public:
 
 	virtual void OnPlayerUpdateCallback(float fTimeElapsed);
 	virtual void OnCameraUpdateCallback(float fTimeElapsed);
+
+	//°úÁ¦
+	float m_fShellEffectiveRange = 150.0f;
+	CShellObject* m_ppShells[SHELL];
+
+	void FireShell(CGameObject* pLockedObject);
+private:
+	virtual void Animate(float fTimeElapsed);
+	virtual void Render(ID3D12GraphicsCommandList* pd3dCommandList, CCamera* pCamera = NULL);
 };

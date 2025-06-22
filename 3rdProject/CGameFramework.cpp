@@ -394,6 +394,8 @@ void CGameFramework::ProcessInput()
 void CGameFramework::AnimateObjects()
 {
 	if (m_pScene) m_pScene->AnimateObjects(m_GameTimer.GetTimeElapsed());
+
+	m_pPlayer->Animate(m_GameTimer.GetTimeElapsed());
 }
 
 void CGameFramework::FrameAdvance()
@@ -580,6 +582,10 @@ void CGameFramework::OnProcessingKeyboardMessage(HWND hWnd, UINT nMessageID, WPA
 /*‘F1’ 키를 누르면 1인칭 카메라, ‘F2’ 키를 누르면 스페이스-쉽 카메라로 변경한다, ‘F3’ 키를 누르면 3인칭 카메라로 변경한다.*/
 		case VK_ESCAPE:
 			::PostQuitMessage(0);
+			break;
+		case VK_CONTROL:
+			((CTerrainPlayer*)m_pPlayer)->FireShell(m_pLockedObject);
+			m_pLockedObject = NULL;
 			break;
 		case VK_F1:
 		case VK_F2:
